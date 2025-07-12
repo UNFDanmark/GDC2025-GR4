@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,8 +26,8 @@ public class CameraMovement : MonoBehaviour
         float horizontalRot = mouseMovement.x * mouseSensitivityHorizontal;
         float verticalRot = - mouseMovement.y * mouseSensitivityVertical;
         transform.Rotate(0, horizontalRot, 0);
-
-        float xRot = mainCamera.transform.rotation.eulerAngles.x+verticalRot;
+        
+        float xRot = mainCamera.transform.localRotation.eulerAngles.x+verticalRot;
 
         if (xRot > 270f)
         {
@@ -35,9 +36,7 @@ public class CameraMovement : MonoBehaviour
 
         Mathf.Clamp(xRot, -90, 90);
         
-        mainCamera.transform.rotation = Quaternion.Euler(xRot, 0, 0);
-        
-        print(mainCamera.transform.rotation.eulerAngles);
+        mainCamera.transform.localRotation = Quaternion.Euler(xRot, 0, 0);
 
     }
 }
