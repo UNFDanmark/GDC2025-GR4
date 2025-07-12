@@ -9,54 +9,75 @@ public class PlayerMovementScript : MonoBehaviour
     public float walkingSpeed;
     public float jumpingHeight;
     public float gravityAcceleration;
-    public float slideBufferTime;
-    public float rateOfSlide;
+    public float glideGravity;
+    public float glideDampPerDegreeUp;
+    public float glideIncreasePerDegreeUp;
+    
     Rigidbody rb;
-
-    public bool jumpable = false;
-    public bool wallSlide = false;
-    public bool touchingSurface = false;
-
-    float timeSpentHanging;
-
     float jumpingForce;
+    GameObject mainCamera;
+    
+    bool jumpable = true;
+    bool gliding = false;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         moveAction.Enable();
         jumpAction.Enable();
         rb = GetComponent<Rigidbody>();
+        mainCamera = GameObject.FindWithTag("MainCamera");
         jumpingForce = Mathf.Sqrt(2 * gravityAcceleration * jumpingHeight);
-    } 
+    }
 
     // Update is called once per frame
     void Update()
     {
-        ProcessWalking();
-        ProcessGravity();
-        if(jumpAction.WasPerformedThisFrame() && jumpable)
-        {
-            Jump();
-        }
-    }
 
-    void ProcessSlidingDownWalls()
-    {
-        if (touchingSurface && wallSlide && !jumpable)
+        if (jumpAction.WasPerformedThisFrame())
         {
-            timeSpentHanging += Time.deltaTime;
+            if (CanJump())
+            {
+                Jump();
+            }
+            else
+            {
+                gliding = true;
+            }
+        }
+
+        if (gliding)
+        {
+            ProcessGlide();
         }
         else
         {
-            timeSpentHanging = 0;
+            ProcessWalking();
+            ProcessGravity();
         }
+    }
 
-        if (timeSpentHanging > slideBufferTime)
+    void ProcessGlide()
+    {
+        float degree = mainCamera.transform.localRotation.eulerAngles.x;
+        Vector3 vel = rb.linearVelocity;
+        if (degree > 270f)
         {
-            Vector3 pos = transform.position;
-            transform.position = new Vector3(pos.x, pos.y - rateOfSlide * Time.deltaTime, pos.z);
-
+            float increase = 360 - degree;
+            vel += mainCamera.transform.forward * rb.linearVelocity.magnitude * (increase * glideDampPerDegreeUp * Time.deltaTime);
+            print("increase: " + increase);
         }
+        else
+        {
+            float decrease = degree;
+            vel = mainCamera.transform.forward * rb.linearVelocity.magnitude;
+            vel += vel.normalized * (decrease * glideIncreasePerDegreeUp * Time.deltaTime);
+            print("decrease: " + decrease);
+        }
+
+        vel.y -= glideGravity * Time.deltaTime;
+
+        rb.linearVelocity = vel;
     }
 
     void ProcessGravity()
@@ -64,6 +85,11 @@ public class PlayerMovementScript : MonoBehaviour
         Vector3 vel = rb.linearVelocity;
         float gravity = gravityAcceleration * Time.deltaTime;
         rb.linearVelocity = new Vector3(vel.x, vel.y - gravity, vel.z);
+    }
+
+    bool CanJump()
+    {
+        return jumpable;
     }
 
     void Jump()
@@ -84,32 +110,21 @@ public class PlayerMovementScript : MonoBehaviour
         rb.linearVelocity = new Vector3(walk.x, vel.y, walk.z);
     }
     
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        print(other.transform.tag);
         if (other.transform.CompareTag("Jumpable"))
         {
             jumpable = true;
-        }else if (other.transform.CompareTag("WallSlide"))
+        }
+
+        if (other.transform.CompareTag("NoGlide"))
         {
-            wallSlide = true;
-        }else if (other.transform.CompareTag("Fill"))
-        {
-            touchingSurface = true;
+            gliding = false;
         }
     }
-    
-    void OnTriggerExit(Collider other)
+
+    void FixedUpdate()
     {
-        if (other.transform.CompareTag("Jumpable"))
-        {
-            jumpable = false;
-        }else if (other.transform.CompareTag("WallSlide"))
-        {
-            wallSlide = false;
-        }else if (other.transform.CompareTag("Fill"))
-        {
-            touchingSurface = false;
-        }
+        jumpable = false;
     }
 }
