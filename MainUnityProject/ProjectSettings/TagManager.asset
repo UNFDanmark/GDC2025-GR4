@@ -8,6 +8,8 @@ TagManager:
   - WallSlide
   - Fill
   - NoGlide
+  - God
+  - Deadly
   layers:
   - Default
   - TransparentFX
