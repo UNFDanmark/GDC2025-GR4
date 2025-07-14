@@ -5,9 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - Jumpable
-  - WallSlide
-  - Fill
   - NoGlide
+  - God
+  - Deadly
+  - Obstacle
   layers:
   - Default
   - TransparentFX

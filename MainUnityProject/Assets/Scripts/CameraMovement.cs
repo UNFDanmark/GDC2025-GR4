@@ -4,21 +4,33 @@ using UnityEngine.InputSystem;
 
 public class CameraMovement : MonoBehaviour
 {
-    GameObject mainCamera;
-    public float mouseSensitivityHorizontalScale;
-    public float mouseSensitivityVerticalScale;
+    // Mouse movement
+    public float mouseSensitivityHorizontalScale; // How much to scale mouse sensitivity in the horizontal direction with
+    public float mouseSensitivityVerticalScale; // How much to scale mouse sensitivity in the vertical direction with
     public float mouseSensitivity;
     
+    // Things found in world that dont change (references)
+    GameObject mainCamera; // 1st person camera
+    DeathScript deathScript;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Initialises the references and captures mouse
     void Start()
     {
         mainCamera = GameObject.FindWithTag("MainCamera");
+        deathScript = GameObject.FindWithTag("God").GetComponent<DeathScript>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
+    // Rotates camera and player correctly to move view around
     void Update()
     {
+        if (deathScript.dead)
+        {
+            return;
+        }
+        
         float mouseSensitivityVertical = mouseSensitivity * mouseSensitivityVerticalScale;
         float mouseSensitivityHorizontal = mouseSensitivity * mouseSensitivityHorizontalScale;
         
