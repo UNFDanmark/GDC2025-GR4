@@ -33,6 +33,7 @@ public class PlayerMovementScript : MonoBehaviour
     public float glideDrag; // Percentage of velocity loss per second (f.x. if 0.2, aka 20%, then after 1 second something moving 25 m/s gonna be moving 25*(1-0.2)=20 m/s, and then 20*(1-0.2)=16 m/s)
     public float glideAdjustmentDegreeRate;
     public float glideBreakRate;
+    public float glideTurnAroundDebuff;
     public float sprintSpeed;
     
     // Things found in world that dont change (references)
@@ -197,6 +198,10 @@ public class PlayerMovementScript : MonoBehaviour
         Vector3 actualGlideDirection = (rb.linearVelocity - gravity).normalized;
 
         Vector3 newGlideDirection = Vector3.RotateTowards(actualGlideDirection, desiredGlideDirection, glideAdjustmentDegreeRate * Mathf.Deg2Rad * Time.deltaTime, 10000);
+        
+        float angle = Vector3.Angle(actualGlideDirection, desiredGlideDirection);
+
+        glidingSpeed *= (1 - angle * glideTurnAroundDebuff * Time.deltaTime);
 
         Vector3 newGlide = newGlideDirection * glidingSpeed;
         
