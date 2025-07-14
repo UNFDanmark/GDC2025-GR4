@@ -26,11 +26,11 @@ public class PlayerMovementScript : MonoBehaviour
     Rigidbody rb; // Rigidbody of player
     GameObject mainCamera; // 1st person camera
     DeathScript deathScript;
+    JumpDetectionScript canJumpScript;
     
     // Stuff calculated at start and then never reassigned (constants)
     float jumpingForce; // Velocity needed to jump to jumpingHeight while being under the influence of walkGravity
     
-    bool jumpable = true; // Can the player jump? (is true when player is touching a collider with the tag "Jumpable", which all jumpable surfaces require to have)
     bool gliding = false; // In walk mode (false) or glide mode (true) ? - decides the movement logic to be done
     float glidingSpeed; // When gliding speed is kept, this speed is seperate from the velocity because it isnt affected by glideGravity
     
@@ -53,6 +53,7 @@ public class PlayerMovementScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         mainCamera = GameObject.FindWithTag("MainCamera");
         deathScript = GameObject.FindWithTag("God").GetComponent<DeathScript>();
+        canJumpScript = GetComponentInChildren<JumpDetectionScript>();
         
         // Initialize the constants
         jumpingForce = Mathf.Sqrt(2 * walkGravity * jumpingHeight);
@@ -222,29 +223,17 @@ public class PlayerMovementScript : MonoBehaviour
     // Is jumping possible? (Was made at time when figuring it out in the moment more complicated than just reading jumpable)
     bool CanJump()
     {
-        return jumpable;
+        return canJumpScript.CanJump();
     }
     
     // Triggers when player touches a collider with IsTrigger sat to true, triggers during physics step
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        
-        // Does collider have Jumpable tag? If so set jumpable variable (set to false during start of physics step)
-        if (other.transform.CompareTag("Jumpable"))
-        {
-            jumpable = true;
-        }
 
         // Does collider have NoGlide tag? If so switch to walking mode (if already walking mode resetting it does nothing)
-        if (other.transform.CompareTag("NoGlide"))
+        if (other.transform.CompareTag("Obstacle"))
         {
             gliding = false;
         }
-    }
-
-    // Sets the intermediate checking values, called during physics step
-    void FixedUpdate()
-    {
-        jumpable = false;
     }
 }

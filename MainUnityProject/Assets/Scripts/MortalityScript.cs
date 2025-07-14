@@ -19,10 +19,9 @@ public class MortalityScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        print(other.gameObject.tag);
         if (other.gameObject.CompareTag("Deadly"))
         {
-            deathScript.Die();
+            deathScript.DieBad();
         }
     }
 }
