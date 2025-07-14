@@ -10,6 +10,7 @@ public class CameraMovement : MonoBehaviour
     public float mouseSensitivity;
     public float fovSpeedModifier;
     public float defaultFov;
+    public float maxFov;
     
     // Things found in world that dont change (references)
     GameObject mainCamera; // 1st person camera
@@ -58,6 +59,6 @@ public class CameraMovement : MonoBehaviour
 
         float speedAlignment = Vector3.Dot(rb.linearVelocity, mainCamera.transform.forward);
 
-        mainCameraComponent.fieldOfView = defaultFov + speedAlignment * fovSpeedModifier;
+        mainCameraComponent.fieldOfView = defaultFov + Mathf.Clamp(speedAlignment * fovSpeedModifier, 0, maxFov-defaultFov) ;
     }
 }

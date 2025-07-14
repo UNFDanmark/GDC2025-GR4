@@ -1,13 +1,17 @@
 using System;
+using System.Numerics;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class PlayerMovementScript : MonoBehaviour
 {
     // InputActions for moving (WASD) and jumping (Space), jump button also used for glider
     public InputAction moveAction;
     public InputAction jumpAction;
+    public InputAction sprintAction;
     
     //Audio & Sfx
     public AudioClip jumpSound;
@@ -27,7 +31,9 @@ public class PlayerMovementScript : MonoBehaviour
     public float glideAccelerationPerDegreeUp; // Per degree the player is pointing up when gliding their speed will accelerate by this (for normal function must be negative)
     public float glideAccelerationPerDegreeDown; // Same as above but down
     public float glideDrag; // Percentage of velocity loss per second (f.x. if 0.2, aka 20%, then after 1 second something moving 25 m/s gonna be moving 25*(1-0.2)=20 m/s, and then 20*(1-0.2)=16 m/s)
-    
+    public float glideAdjustmentDegreeRate;
+    public float glideBreakRate;
+    public float sprintSpeed;
     
     // Things found in world that dont change (references)
     Rigidbody rb; // Rigidbody of player
@@ -43,6 +49,7 @@ public class PlayerMovementScript : MonoBehaviour
     float walkingAcceleration;
     
     bool gliding = false; // In walk mode (false) or glide mode (true) ? - decides the movement logic to be done
+    bool canBreak = false;
     float glidingSpeed; // When gliding speed is kept, this speed is seperate from the velocity because it isnt affected by glideGravity
     
     /*
@@ -59,6 +66,7 @@ public class PlayerMovementScript : MonoBehaviour
         // Initialize the InputActions
         moveAction.Enable();
         jumpAction.Enable();
+        sprintAction.Enable();
         
         // Initialize the references
         rb = GetComponent<Rigidbody>();
@@ -90,14 +98,20 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 Jump();
             }
-            else if(gliding)
-            {
-                GlideBreak();
-            }
-            else
+            else if(!gliding)
             {
                 BeginGlide();
             }
+        }
+
+        if (gliding && !jumpAction.IsPressed())
+        {
+            canBreak = true;
+        }
+
+        if (canBreak && jumpAction.IsPressed())
+        {
+            GlideBreak();
         }
 
         if (gliding)
@@ -119,7 +133,8 @@ public class PlayerMovementScript : MonoBehaviour
 
     void GlideBreak()
     {
-        //TODO
+        glidingSpeed *= (1 - glideBreakRate * Time.deltaTime);
+        print("break: " + glidingSpeed);
     }
 
     // Switch to gliding mode and set initial gliding speed
@@ -175,14 +190,25 @@ public class PlayerMovementScript : MonoBehaviour
         glidingSpeed = Mathf.Clamp(glidingSpeed, glideMinSpeed, glideMaxSpeed);
 
         // Gliding vector, aka the way player is looking multiplied by glidingSpeed;
-        Vector3 gliding = mainCamera.transform.forward * glidingSpeed;
+        Vector3 desiredGlideDirection = mainCamera.transform.forward;
+        
+        Vector3 gravity = new Vector3(0, -glideGravity, 0);
+
+        Vector3 actualGlideDirection = (rb.linearVelocity - gravity).normalized;
+
+        Vector3 newGlideDirection = Vector3.RotateTowards(actualGlideDirection, desiredGlideDirection, glideAdjustmentDegreeRate * Mathf.Deg2Rad * Time.deltaTime, 10000);
+
+        Vector3 newGlide = newGlideDirection * glidingSpeed;
         
         // Gravity vector, pointing down (into y)
-        Vector3 gravity = new Vector3(0, -glideGravity, 0);
+        
         
         // Add 2 vectors and make it the velocity of player
-        rb.linearVelocity = gliding + gravity;
-          
+        rb.linearVelocity = newGlide + gravity;
+        
+        
+        
+        
     }
     
     /*
@@ -208,7 +234,18 @@ public class PlayerMovementScript : MonoBehaviour
         
         // 2D vector for movement (W = (0, 1), A = (-1, 0), S = (0, -1), D = (1, 0), WD = (sqrt(2), sqrt(2)), and so on)
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
-        
+
+        float speed;
+
+        if (moveInput == Vector2.up && sprintAction.IsPressed())
+        {
+            speed = sprintSpeed;
+        }
+        else
+        {
+            speed = walkingSpeed;
+        }
+
         // Forward direction of player (NOT camera so this vector is aligned with ground and has no y section)
         Vector3 forwardFake = transform.forward;
         Vector2 forward = new Vector2(forwardFake.x, forwardFake.z);
@@ -221,7 +258,7 @@ public class PlayerMovementScript : MonoBehaviour
         // And W and S (moveInput y component) multiplying with the forwards vector (since S is negative in the moveInput)
         Vector2 direction = moveInput.x * right + moveInput.y * forward;
         
-        float speed = walkingSpeed;
+        
 
         Vector3 vel = rb.linearVelocity;
         
@@ -282,6 +319,12 @@ public class PlayerMovementScript : MonoBehaviour
      * ===========================================================================================================
      */
 
+    void StopGliding()
+    {
+        gliding = false;
+        canBreak = false;
+    }
+
     // Is jumping possible? (Was made at time when figuring it out in the moment more complicated than just reading jumpable)
     bool CanJump()
     {
@@ -295,7 +338,8 @@ public class PlayerMovementScript : MonoBehaviour
         // Does collider have NoGlide tag? If so switch to walking mode (if already walking mode resetting it does nothing)
         if (other.transform.CompareTag("Obstacle"))
         {
-            gliding = false;
+            StopGliding();
+            
         }
     }
 }
