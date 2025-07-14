@@ -1,4 +1,5 @@
 using System;
+using Unity.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,8 +9,13 @@ public class PlayerMovementScript : MonoBehaviour
     public InputAction moveAction;
     public InputAction jumpAction;
     
+    //Audio & Sfx
+    public AudioClip jumpSound;
+    public AudioClip gliderPulloutSound;
+    
     // Physics for when in walk mode
     public float walkingSpeed;
+    public float timeToFullWalk;
     public float jumpingHeight; // Height of a full jump
     public float walkGravity;
     
@@ -22,14 +28,19 @@ public class PlayerMovementScript : MonoBehaviour
     public float glideAccelerationPerDegreeDown; // Same as above but down
     public float glideDrag; // Percentage of velocity loss per second (f.x. if 0.2, aka 20%, then after 1 second something moving 25 m/s gonna be moving 25*(1-0.2)=20 m/s, and then 20*(1-0.2)=16 m/s)
     
+    
     // Things found in world that dont change (references)
     Rigidbody rb; // Rigidbody of player
     GameObject mainCamera; // 1st person camera
     DeathScript deathScript;
     JumpDetectionScript canJumpScript;
+    InventoryManager inventoryManager;
+    SfxScript sfxScript;
+    
     
     // Stuff calculated at start and then never reassigned (constants)
     float jumpingForce; // Velocity needed to jump to jumpingHeight while being under the influence of walkGravity
+    float walkingAcceleration;
     
     bool gliding = false; // In walk mode (false) or glide mode (true) ? - decides the movement logic to be done
     float glidingSpeed; // When gliding speed is kept, this speed is seperate from the velocity because it isnt affected by glideGravity
@@ -54,9 +65,13 @@ public class PlayerMovementScript : MonoBehaviour
         mainCamera = GameObject.FindWithTag("MainCamera");
         deathScript = GameObject.FindWithTag("God").GetComponent<DeathScript>();
         canJumpScript = GetComponentInChildren<JumpDetectionScript>();
+        inventoryManager = GetComponent<InventoryManager>();
+        sfxScript = GetComponent<SfxScript>();
+        
         
         // Initialize the constants
         jumpingForce = Mathf.Sqrt(2 * walkGravity * jumpingHeight);
+        walkingAcceleration = walkingSpeed / timeToFullWalk;
     }
 
     // Update is called once per frame
@@ -74,6 +89,10 @@ public class PlayerMovementScript : MonoBehaviour
             if (CanJump())
             {
                 Jump();
+            }
+            else if(gliding)
+            {
+                GlideBreak();
             }
             else
             {
@@ -98,11 +117,27 @@ public class PlayerMovementScript : MonoBehaviour
      * ================================================================================
      */
 
+    void GlideBreak()
+    {
+        //TODO
+    }
+
     // Switch to gliding mode and set initial gliding speed
     void BeginGlide()
     {
-        gliding = true;
-        glidingSpeed = glideInitSpeed;
+        if (inventoryManager.HasGlider())
+        {
+            gliding = true;
+            if (rb.linearVelocity.magnitude < glideInitSpeed)
+            {
+                glidingSpeed = glideInitSpeed;
+            }
+            else
+            {
+                glidingSpeed = rb.linearVelocity.magnitude;
+            }
+            sfxScript.PlaySfx(gliderPulloutSound);
+        }
     }
 
     // Handle gliding logic from frame to frame
@@ -147,6 +182,7 @@ public class PlayerMovementScript : MonoBehaviour
         
         // Add 2 vectors and make it the velocity of player
         rb.linearVelocity = gliding + gravity;
+          
     }
     
     /*
@@ -161,6 +197,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         Vector3 vel = rb.linearVelocity;
         rb.linearVelocity = new Vector3(vel.x, jumpingForce, vel.z);
+        sfxScript.PlaySfx(jumpSound);
     }
 
     // Handle walking logic from frame to frame
@@ -173,25 +210,50 @@ public class PlayerMovementScript : MonoBehaviour
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
         
         // Forward direction of player (NOT camera so this vector is aligned with ground and has no y section)
-        Vector3 forward = transform.forward;
+        Vector3 forwardFake = transform.forward;
+        Vector2 forward = new Vector2(forwardFake.x, forwardFake.z);
         
         // Rightwards direction of player (NOT camera so this vector is aligned with ground and has no y section)
-        Vector3 right = transform.right;
+        Vector3 rightFake = transform.right;
+        Vector2 right = new Vector2(rightFake.x, rightFake.z);
         
         // "Real world" (3D) direction vector for movement, with A and D (moveInput x component) multiplying with the rightwards vector (since left is negative in the moveInput)
         // And W and S (moveInput y component) multiplying with the forwards vector (since S is negative in the moveInput)
-        Vector3 direction = moveInput.x * right + moveInput.y * forward;
+        Vector2 direction = moveInput.x * right + moveInput.y * forward;
         
         float speed = walkingSpeed;
-        
-        // Actual movement vector for walking, direction multiplied by speed
-        Vector3 walk = direction * speed;
-        
-        // Saving velocity for manipulating it
+
         Vector3 vel = rb.linearVelocity;
         
+        Vector2 currentWalk =  new Vector2(vel.x, vel.z);
+
+        Vector2 desiredWalk = direction * speed;
+        
+        // Actual movement vector for walking, direction multiplied by speed
+        Vector2 correction = desiredWalk - currentWalk;
+
+        float correctionDistance = walkingAcceleration * Time.deltaTime;
+        
+        Vector2 newWalk;
+        
+        if (correctionDistance < correction.magnitude)
+        {
+             newWalk = currentWalk + correctionDistance * correction.normalized;
+        }
+        else
+        {
+            newWalk = desiredWalk;
+        }
+
+
+        if (CanJump())
+        {
+            gravity = 0;
+        }
+        
+        
         // Replacing X and Z coordinates (those that go along with the ground) equal to the parts from the movement vector, and applying gravity to Y (upwards/downwards) velocity
-        rb.linearVelocity = new Vector3(walk.x, vel.y - gravity, walk.z);
+        rb.linearVelocity = new Vector3(newWalk.x, vel.y - gravity, newWalk.y);
     }
     
     /*

@@ -8,9 +8,13 @@ public class CameraMovement : MonoBehaviour
     public float mouseSensitivityHorizontalScale; // How much to scale mouse sensitivity in the horizontal direction with
     public float mouseSensitivityVerticalScale; // How much to scale mouse sensitivity in the vertical direction with
     public float mouseSensitivity;
+    public float fovSpeedModifier;
+    public float defaultFov;
     
     // Things found in world that dont change (references)
     GameObject mainCamera; // 1st person camera
+    Camera mainCameraComponent;
+    Rigidbody rb;
     DeathScript deathScript;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,7 +22,9 @@ public class CameraMovement : MonoBehaviour
     void Start()
     {
         mainCamera = GameObject.FindWithTag("MainCamera");
+        mainCameraComponent = mainCamera.GetComponent<Camera>();
         deathScript = GameObject.FindWithTag("God").GetComponent<DeathScript>();
+        rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -50,5 +56,8 @@ public class CameraMovement : MonoBehaviour
         
         mainCamera.transform.localRotation = Quaternion.Euler(xRot, 0, 0);
 
+        float speedAlignment = Vector3.Dot(rb.linearVelocity, mainCamera.transform.forward);
+
+        mainCameraComponent.fieldOfView = defaultFov + speedAlignment * fovSpeedModifier;
     }
 }

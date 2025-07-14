@@ -23,6 +23,8 @@ public class DeathScript : MonoBehaviour
     public GameObject endCanvas;
     public float fadeToWhiteSpeed;
     Image fadeToWhiteImage;
+    MusicScript musicScript;
+    public AudioClip endingSong;
     
     bool isEnding = false;
     DeathScript deathScript;
@@ -37,6 +39,7 @@ public class DeathScript : MonoBehaviour
         
         fadeToWhiteImage = endCanvas.GetComponentInChildren<Image>();
         deathScript = GetComponent<DeathScript>();
+        musicScript = GetComponent<MusicScript>();
     }
 
     // Update is called once per frame
@@ -69,7 +72,7 @@ public class DeathScript : MonoBehaviour
         endCanvas.SetActive(true);
         isEnding = true;
         dead = true;
-
+        musicScript.SetMusic(endingSong);
     }
 
     public void Respawn()
