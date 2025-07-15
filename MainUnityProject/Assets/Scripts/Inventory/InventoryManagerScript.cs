@@ -3,7 +3,8 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public bool hasGlider = false;
-    
+
+    public GameObject gliderIconCanvas;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,6 +20,7 @@ public class InventoryManager : MonoBehaviour
     public void PickUpGlider()
     {
         hasGlider = true;
+        gliderIconCanvas.SetActive(true);
     }
 
     public bool HasGlider()

@@ -3,6 +3,7 @@ using System.Numerics;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -34,6 +35,7 @@ public class PlayerMovementScript : MonoBehaviour
     public float maxSprintSpeed;
     public float timeToFullSprint;
     public float timeToTurnAround;
+    public float gliderIconImageBaseOpacity;
 
     [Header("Walking Sound Settings")]
     public float walkSoundSpeed;
@@ -57,6 +59,9 @@ public class PlayerMovementScript : MonoBehaviour
     public float gliderPitchIncreaseRate;
     public float gliderPitchStart;
     
+    [Header]
+    public GameObject gliderIcon;
+
     
     // Things found in world that dont change (references)
     Rigidbody rb; // Rigidbody of player
@@ -68,6 +73,7 @@ public class PlayerMovementScript : MonoBehaviour
     AudioSource glidingAudioSource;
     AudioSource walkingAudioSource;
     AudioSource gliderPullOutAudioSource;
+    Image gliderIconImage;
     
     
     // Stuff calculated at start and then never reassigned (constants)
@@ -122,6 +128,7 @@ public class PlayerMovementScript : MonoBehaviour
         walkingDeacceleration = maxWalkingSpeed / timeToStop;
         sprintingAcceleration = (maxSprintSpeed - minSprintSpeed) / timeToFullSprint;
         turnAcceleration = 2 * maxWalkingSpeed / timeToTurnAround;
+        gliderIconImage = gliderIcon.GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -176,6 +183,7 @@ public class PlayerMovementScript : MonoBehaviour
         }
 
         WalkSound();
+        
     }
     
     /*
@@ -207,6 +215,8 @@ public class PlayerMovementScript : MonoBehaviour
                 glidingSpeed = rb.linearVelocity.magnitude;
             }
             gliderPullOutAudioSource.PlayOneShot(gliderPulloutSound);
+
+            gliderIconImage.color = new Color(1, 1, 1, 1);
         }
     }
 
@@ -337,7 +347,11 @@ public class PlayerMovementScript : MonoBehaviour
 
         float correctionDistance;
 
-        if (currentWalk == Vector2.zero)
+        if (direction == Vector2.zero)
+        {
+            correctionDistance = walkingDeacceleration;
+        }
+        else if (currentWalk == Vector2.zero)
         {
             correctionDistance = minSpeed;
         }else if (currentWalk.normalized == direction)
@@ -403,6 +417,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         gliding = false;
         canBreak = false;
+        gliderIconImage.color = new Color(1, 1, 1, gliderIconImageBaseOpacity);
     }
 
     // Is jumping possible? (Was made at time when figuring it out in the moment more complicated than just reading jumpable)
