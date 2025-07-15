@@ -48,6 +48,7 @@ public class CameraMovement : MonoBehaviour
     {
         if (deathScript.dead)
         {
+            mainCameraComponent.fieldOfView = defaultFov;
             return;
         }
         

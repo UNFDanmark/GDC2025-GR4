@@ -26,7 +26,7 @@ public class JumpDetectionScript : MonoBehaviour
     {
         
         // Does collider have Jumpable tag? If so set jumpable variable (set to false during start of physics step)
-        if (other.transform.CompareTag("Obstacle"))
+        if (other.transform.CompareTag("Obstacle") || other.transform.CompareTag("Rock") || other.transform.CompareTag("Grass"))
         {
             canJump = true;
         }
