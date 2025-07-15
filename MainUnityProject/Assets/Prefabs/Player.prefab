@@ -452,6 +452,15 @@ MonoBehaviour:
       m_Action: Jump
       m_Flags: 0
     m_Flags: 0
+  sprintAction:
+    m_Name: Sprint
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 648442c8-fab9-483e-91b8-ea94e209cba7
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   jumpSound: {fileID: 8300000, guid: f3018878caa3e814e9ba93c8ba384a37, type: 3}
   gliderPulloutSound: {fileID: 8300000, guid: 410f0b1b59d857543a0a87ed88252f83, type: 3}
   walkingSpeed: 3
@@ -465,6 +474,10 @@ MonoBehaviour:
   glideAccelerationPerDegreeUp: -0.15
   glideAccelerationPerDegreeDown: 0.15
   glideDrag: 0.1
+  glideAdjustmentDegreeRate: 0
+  glideBreakRate: 0
+  glideTurnAroundDebuff: 0
+  sprintSpeed: 0
 --- !u!114 &3785733920889740900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,6 +495,10 @@ MonoBehaviour:
   mouseSensitivity: 0.5
   fovSpeedModifier: 2
   defaultFov: 60
+  maxFov: 0
+  headBobbingSpeed: 0
+  headBobbingAmplitudeVertical: 0
+  headBobbingAmplitudeHorizontal: 0
 --- !u!136 &5107773257524748560
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -517,6 +534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d1a90fd4060d64fb9449b031dfdb00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ImpulseForDeath: 0
 --- !u!114 &706818318373910539
 MonoBehaviour:
   m_ObjectHideFlags: 0
