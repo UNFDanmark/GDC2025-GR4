@@ -16,6 +16,7 @@ public class PlayerMovementScript : MonoBehaviour
     //Audio & Sfx
     public AudioClip jumpSound;
     public AudioClip gliderPulloutSound;
+    public AudioClip gliderSwoosh;
     
     // Physics for when in walk mode
     public float walkingSpeed;
@@ -42,7 +43,9 @@ public class PlayerMovementScript : MonoBehaviour
     DeathScript deathScript;
     JumpDetectionScript canJumpScript;
     InventoryManager inventoryManager;
-    SfxScript sfxScript;
+    AudioSource jumpAudioSource;
+    AudioSource glidingAudioSource;
+    AudioSource walkingAudioSource;
     
     
     // Stuff calculated at start and then never reassigned (constants)
@@ -72,10 +75,13 @@ public class PlayerMovementScript : MonoBehaviour
         // Initialize the references
         rb = GetComponent<Rigidbody>();
         mainCamera = GameObject.FindWithTag("MainCamera");
-        deathScript = GameObject.FindWithTag("God").GetComponent<DeathScript>();
+        deathScript = GetComponent<DeathScript>();
         canJumpScript = GetComponentInChildren<JumpDetectionScript>();
         inventoryManager = GetComponent<InventoryManager>();
-        sfxScript = GetComponent<SfxScript>();
+        SoundScript soundScript = GetComponent<SoundScript>();
+        jumpAudioSource = soundScript.MakeNewSource();
+        glidingAudioSource = soundScript.MakeNewSource();
+        walkingAudioSource = soundScript.MakeNewSource();
         
         
         // Initialize the constants
@@ -152,7 +158,6 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 glidingSpeed = rb.linearVelocity.magnitude;
             }
-            sfxScript.PlaySfx(gliderPulloutSound);
         }
     }
 
@@ -211,9 +216,10 @@ public class PlayerMovementScript : MonoBehaviour
         // Add 2 vectors and make it the velocity of player
         rb.linearVelocity = newGlide + gravity;
         
-        
-        
-        
+        //trying to make glide swoosh sound
+
+
+
     }
     
     /*
@@ -228,7 +234,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         Vector3 vel = rb.linearVelocity;
         rb.linearVelocity = new Vector3(vel.x, jumpingForce, vel.z);
-        sfxScript.PlaySfx(jumpSound);
+        jumpAudioSource.PlayOneShot(jumpSound);
     }
 
     // Handle walking logic from frame to frame
@@ -347,4 +353,5 @@ public class PlayerMovementScript : MonoBehaviour
             
         }
     }
+    
 }

@@ -10,7 +10,7 @@ public class MortalityScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        deathScript = GameObject.FindWithTag("God").GetComponent<DeathScript>();
+        deathScript = GetComponent<DeathScript>();
     }
 
     // Update is called once per frame

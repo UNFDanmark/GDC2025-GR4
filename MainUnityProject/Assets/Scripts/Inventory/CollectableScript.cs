@@ -7,17 +7,16 @@ public class CollectableScript : MonoBehaviour
     public InputAction collectAction;
     InventoryManager inventoryManager;
     TextScript textScript;
-    SfxScript sfxScript;
+    AudioSource audioSource;
     public AudioClip pickUpSound;
     bool isInRange = false;
-    bool hasBeenInRange = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         collectAction.Enable();
         inventoryManager = GameObject.FindWithTag("Player").GetComponent<InventoryManager>();
-        sfxScript = GameObject.FindWithTag("Player").GetComponent<SfxScript>();
+        audioSource = GameObject.FindWithTag("Player").GetComponent<SoundScript>().MakeNewSource();
         textScript = GameObject.FindWithTag("Player").GetComponent<TextScript>();
     }
 
@@ -71,6 +70,7 @@ public class CollectableScript : MonoBehaviour
     void PickUp()
     {
         inventoryManager.PickUpGlider();
+        audioSource.PlayOneShot(pickUpSound);
         ExitRange();
         Destroy(gameObject);
     }

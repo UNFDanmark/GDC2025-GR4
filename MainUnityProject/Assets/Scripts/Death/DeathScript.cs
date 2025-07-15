@@ -27,7 +27,6 @@ public class DeathScript : MonoBehaviour
     public AudioClip endingSong;
     
     bool isEnding = false;
-    DeathScript deathScript;
     float fadeToWhite = 0f;
     // Start is called once bef
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -38,7 +37,6 @@ public class DeathScript : MonoBehaviour
         saveState = new SaveState(new Vector3(-7.08f, 11.89f, 3.4f));
         
         fadeToWhiteImage = endCanvas.GetComponentInChildren<Image>();
-        deathScript = GetComponent<DeathScript>();
         musicScript = GetComponent<MusicScript>();
     }
 
