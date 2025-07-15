@@ -9,6 +9,8 @@ TagManager:
   - God
   - Deadly
   - Obstacle
+  - Rock
+  - Grass
   layers:
   - Default
   - TransparentFX
