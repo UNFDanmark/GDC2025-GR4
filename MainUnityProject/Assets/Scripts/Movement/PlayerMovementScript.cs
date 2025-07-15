@@ -36,6 +36,10 @@ public class PlayerMovementScript : MonoBehaviour
     public float glideBreakRate;
     public float glideTurnAroundDebuff;
     public float sprintSpeed;
+
+    public float gliderVolumeIncreaseRate;
+    public float gliderPitchIncreaseRate;
+    public float gliderPitchStart;
     
     // Things found in world that dont change (references)
     Rigidbody rb; // Rigidbody of player
@@ -82,7 +86,11 @@ public class PlayerMovementScript : MonoBehaviour
         jumpAudioSource = soundScript.MakeNewSource();
         glidingAudioSource = soundScript.MakeNewSource();
         walkingAudioSource = soundScript.MakeNewSource();
-        
+
+        glidingAudioSource.loop = true;
+        glidingAudioSource.volume = 0;
+        glidingAudioSource.clip = gliderSwoosh;
+        glidingAudioSource.Play();
         
         // Initialize the constants
         jumpingForce = Mathf.Sqrt(2 * walkGravity * jumpingHeight);
@@ -128,6 +136,16 @@ public class PlayerMovementScript : MonoBehaviour
         else
         {
             ProcessWalking();
+        }
+        
+        if (CanJump())
+        {
+            glidingAudioSource.volume = 0;
+        }
+        else
+        {
+            glidingAudioSource.volume = rb.linearVelocity.magnitude * gliderVolumeIncreaseRate;
+            glidingAudioSource.pitch = rb.linearVelocity.magnitude * gliderPitchIncreaseRate + gliderPitchStart;
         }
     }
     
