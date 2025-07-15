@@ -9,22 +9,38 @@ using Vector3 = UnityEngine.Vector3;
 public class PlayerMovementScript : MonoBehaviour
 {
     // InputActions for moving (WASD) and jumping (Space), jump button also used for glider
+    [Header("Controls")]
     public InputAction moveAction;
     public InputAction jumpAction;
     public InputAction sprintAction;
     
     //Audio & Sfx
+    [Header("Audio")]
     public AudioClip jumpSound;
     public AudioClip gliderPulloutSound;
     public AudioClip gliderSwoosh;
+    public AudioClip stepRockSound;
+    public AudioClip stepGrassSound;
     
     // Physics for when in walk mode
-    public float walkingSpeed;
+    [Header("Walking Physics")]
+    public float minWalkingSpeed;
+    public float maxWalkingSpeed;
     public float timeToFullWalk;
+    public float timeToStop;
     public float jumpingHeight; // Height of a full jump
     public float walkGravity;
-    
+    public float minSprintSpeed;
+    public float maxSprintSpeed;
+    public float timeToFullSprint;
+    public float timeToTurnAround;
+
+    [Header("Walking Sound Settings")]
+    public float walkSoundSpeed;
+    public float walkingSoundVolume;
     // Physics for when in glide mode
+    
+    [Header("Gliding Physics")]
     public float glideGravity;
     public float glideMinSpeed;
     public float glideMaxSpeed;
@@ -35,11 +51,12 @@ public class PlayerMovementScript : MonoBehaviour
     public float glideAdjustmentDegreeRate;
     public float glideBreakRate;
     public float glideTurnAroundDebuff;
-    public float sprintSpeed;
 
+    [Header("Gliding Sound Settings")]
     public float gliderVolumeIncreaseRate;
     public float gliderPitchIncreaseRate;
     public float gliderPitchStart;
+    
     
     // Things found in world that dont change (references)
     Rigidbody rb; // Rigidbody of player
@@ -50,16 +67,21 @@ public class PlayerMovementScript : MonoBehaviour
     AudioSource jumpAudioSource;
     AudioSource glidingAudioSource;
     AudioSource walkingAudioSource;
+    AudioSource gliderPullOutAudioSource;
     
     
     // Stuff calculated at start and then never reassigned (constants)
     float jumpingForce; // Velocity needed to jump to jumpingHeight while being under the influence of walkGravity
     float walkingAcceleration;
+    float walkingDeacceleration;
+    float sprintingAcceleration;
+    float sprintingDeacceleration;
+    float turnAcceleration;
     
     bool gliding = false; // In walk mode (false) or glide mode (true) ? - decides the movement logic to be done
     bool canBreak = false;
     float glidingSpeed; // When gliding speed is kept, this speed is seperate from the velocity because it isnt affected by glideGravity
-    
+    float walkSoundSpeedCooldown = 1;
     /*
      * ===================================================================================
      * START AND UPDATE
@@ -86,22 +108,27 @@ public class PlayerMovementScript : MonoBehaviour
         jumpAudioSource = soundScript.MakeNewSource();
         glidingAudioSource = soundScript.MakeNewSource();
         walkingAudioSource = soundScript.MakeNewSource();
+        gliderPullOutAudioSource = soundScript.MakeNewSource();
 
         glidingAudioSource.loop = true;
         glidingAudioSource.volume = 0;
         glidingAudioSource.clip = gliderSwoosh;
         glidingAudioSource.Play();
+        walkingAudioSource.volume = walkingSoundVolume;
         
         // Initialize the constants
         jumpingForce = Mathf.Sqrt(2 * walkGravity * jumpingHeight);
-        walkingAcceleration = walkingSpeed / timeToFullWalk;
+        walkingAcceleration = (maxWalkingSpeed - minWalkingSpeed) / timeToFullWalk;
+        walkingDeacceleration = maxWalkingSpeed / timeToStop;
+        sprintingAcceleration = (maxSprintSpeed - minSprintSpeed) / timeToFullSprint;
+        turnAcceleration = 2 * maxWalkingSpeed / timeToTurnAround;
     }
 
     // Update is called once per frame
     // Not commented because its mostly self-explanatory
     void Update()
     {
-        if (deathScript.dead)
+        if (deathScript.IsDead())
         {
             rb.linearVelocity = Vector3.zero;
             return;
@@ -147,6 +174,8 @@ public class PlayerMovementScript : MonoBehaviour
             glidingAudioSource.volume = rb.linearVelocity.magnitude * gliderVolumeIncreaseRate;
             glidingAudioSource.pitch = rb.linearVelocity.magnitude * gliderPitchIncreaseRate + gliderPitchStart;
         }
+
+        WalkSound();
     }
     
     /*
@@ -168,6 +197,7 @@ public class PlayerMovementScript : MonoBehaviour
         if (inventoryManager.HasGlider())
         {
             gliding = true;
+            
             if (rb.linearVelocity.magnitude < glideInitSpeed)
             {
                 glidingSpeed = glideInitSpeed;
@@ -176,6 +206,7 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 glidingSpeed = rb.linearVelocity.magnitude;
             }
+            gliderPullOutAudioSource.PlayOneShot(gliderPulloutSound);
         }
     }
 
@@ -264,15 +295,21 @@ public class PlayerMovementScript : MonoBehaviour
         // 2D vector for movement (W = (0, 1), A = (-1, 0), S = (0, -1), D = (1, 0), WD = (sqrt(2), sqrt(2)), and so on)
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
 
-        float speed;
+        float maxSpeed;
+        float minSpeed;
+        float acceleration;
 
-        if (moveInput == Vector2.up && sprintAction.IsPressed())
+        if (moveInput.y > 0 && sprintAction.IsPressed())
         {
-            speed = sprintSpeed;
+            maxSpeed = maxSprintSpeed;
+            minSpeed = minSprintSpeed;
+            acceleration = sprintingAcceleration;
         }
         else
         {
-            speed = walkingSpeed;
+            maxSpeed = maxWalkingSpeed;
+            minSpeed = minWalkingSpeed;
+            acceleration = walkingAcceleration;
         }
 
         // Forward direction of player (NOT camera so this vector is aligned with ground and has no y section)
@@ -293,12 +330,25 @@ public class PlayerMovementScript : MonoBehaviour
         
         Vector2 currentWalk =  new Vector2(vel.x, vel.z);
 
-        Vector2 desiredWalk = direction * speed;
+        Vector2 desiredWalk = direction * maxSpeed;
         
         // Actual movement vector for walking, direction multiplied by speed
         Vector2 correction = desiredWalk - currentWalk;
 
-        float correctionDistance = walkingAcceleration * Time.deltaTime;
+        float correctionDistance;
+
+        if (currentWalk == Vector2.zero)
+        {
+            correctionDistance = minSpeed;
+        }else if (currentWalk.normalized == direction)
+        {
+            correctionDistance = acceleration;
+        }else
+        {
+            correctionDistance = turnAcceleration;
+        }
+
+        correctionDistance *= Time.deltaTime;
         
         Vector2 newWalk;
         
@@ -320,6 +370,7 @@ public class PlayerMovementScript : MonoBehaviour
         
         // Replacing X and Z coordinates (those that go along with the ground) equal to the parts from the movement vector, and applying gravity to Y (upwards/downwards) velocity
         rb.linearVelocity = new Vector3(newWalk.x, vel.y - gravity, newWalk.y);
+        
     }
     
     /*
@@ -361,15 +412,39 @@ public class PlayerMovementScript : MonoBehaviour
     }
     
     // Triggers when player touches a collider with IsTrigger sat to true, triggers during physics step
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision other)
     {
 
         // Does collider have NoGlide tag? If so switch to walking mode (if already walking mode resetting it does nothing)
-        if (other.transform.CompareTag("Obstacle"))
+        if (other.transform.CompareTag("Obstacle")|| other.transform.CompareTag("Rock")||other.transform.CompareTag("Grass"))
         {
             StopGliding();
             
         }
     }
-    
+
+    void OnTriggerStay(Collider other)
+    { 
+        if (walkSoundSpeedCooldown <0)
+        {
+            if (other.gameObject.CompareTag("Rock"))
+            {
+                walkingAudioSource.PlayOneShot(stepRockSound);
+            }
+            else if (other.gameObject.CompareTag("Grass"))
+            {
+                walkingAudioSource.PlayOneShot(stepGrassSound);
+            }
+
+            walkSoundSpeedCooldown = 1;
+        }
+    }
+
+    void WalkSound()
+    {
+        if (CanJump() && rb.linearVelocity.magnitude != 0)
+        {
+            walkSoundSpeedCooldown -= walkSoundSpeed * rb.linearVelocity.magnitude * Time.deltaTime;
+        }
+    }
 }

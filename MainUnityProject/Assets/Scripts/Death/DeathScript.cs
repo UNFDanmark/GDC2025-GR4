@@ -13,7 +13,7 @@ public class DeathScript : MonoBehaviour
         }
     }
 
-    public bool dead = false;
+    bool dead = false;
 
     SaveState saveState;
 
@@ -21,6 +21,7 @@ public class DeathScript : MonoBehaviour
     public GameObject respawnCanvas;
         
     public GameObject endCanvas;
+    
     public float fadeToWhiteSpeed;
     Image fadeToWhiteImage;
     MusicScript musicScript;
@@ -49,6 +50,11 @@ public class DeathScript : MonoBehaviour
             fadeToWhite += fadeToWhiteSpeed * Time.deltaTime;
             fadeToWhiteImage.color = new Color(1, 1, 1, fadeToWhite);
         }
+    }
+
+    public bool IsDead()
+    {
+        return dead;
     }
 
     public void Save(SaveState state)

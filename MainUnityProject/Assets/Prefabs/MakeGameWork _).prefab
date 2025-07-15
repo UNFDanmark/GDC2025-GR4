@@ -563,7 +563,7 @@ Transform:
   m_GameObject: {fileID: 5484183192347884315}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -39.2, y: 74.6, z: -22.8}
+  m_LocalPosition: {x: 25.93, y: 16.1, z: 37.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -741,10 +741,20 @@ MonoBehaviour:
   jumpSound: {fileID: 8300000, guid: f2307e68abae9224bbc04dbb8d84fcbb, type: 3}
   gliderPulloutSound: {fileID: 8300000, guid: 410f0b1b59d857543a0a87ed88252f83, type: 3}
   gliderSwoosh: {fileID: 8300000, guid: 17abbc24c38e9e34298d8642a7dc6dd8, type: 3}
-  walkingSpeed: 3
+  stepRockSound: {fileID: 8300000, guid: 854a8f204dd741f46926757166a4d0e1, type: 3}
+  stepGrassSound: {fileID: 8300000, guid: 6da78b8a60cca1a46b84ba44ddb0e875, type: 3}
+  minWalkingSpeed: 1
+  maxWalkingSpeed: 3
   timeToFullWalk: 0.2
+  timeToStop: 0.2
   jumpingHeight: 1
   walkGravity: 9.81
+  minSprintSpeed: 2
+  maxSprintSpeed: 7
+  timeToFullSprint: 0.2
+  timeToTurnAround: 0.1
+  walkSoundSpeed: 0.5
+  walkingSoundVolume: 1
   glideGravity: 1
   glideMinSpeed: 0
   glideMaxSpeed: 100000
@@ -755,7 +765,9 @@ MonoBehaviour:
   glideAdjustmentDegreeRate: 180
   glideBreakRate: 0.5
   glideTurnAroundDebuff: 0.1
-  sprintSpeed: 6
+  gliderVolumeIncreaseRate: 0.033
+  gliderPitchIncreaseRate: 0.05
+  gliderPitchStart: 1
 --- !u!114 &748951844638653686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -772,6 +784,8 @@ MonoBehaviour:
   mouseSensitivityVerticalScale: 1
   mouseSensitivity: 0.5
   fovSpeedModifier: 2
+  speedForFov: 6
+  fovAdjustmentRate: 10
   defaultFov: 60
   maxFov: 120
   headBobbingSpeed: 1.2
@@ -790,7 +804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d1a90fd4060d64fb9449b031dfdb00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ImpulseForDeath: 20
+  ImpulseForDeath: 15
 --- !u!114 &7132854157507183989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -823,13 +837,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5484183192347884315}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72d6051663335924285d8ac2cbeb258b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   startingSong: {fileID: 8300000, guid: 2d40e25b9be25f840926bc465b42bb92, type: 3}
   initVolume: 0.5
+  initPitch: 0
 --- !u!114 &4842948453001721247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,7 +857,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d00db7652009af4e817060e1e43d540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dead: 0
   respawnCanvas: {fileID: 2161474732824354900}
   endCanvas: {fileID: 8601802294750499637}
   fadeToWhiteSpeed: 0.2
@@ -877,7 +891,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7612637937950181878}
   m_Father: {fileID: 1752273727780530684}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &7345500545066348068
@@ -1457,3 +1472,65 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1001 &8417538942396455696
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7927060734619328239}
+    m_Modifications:
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5081069273959196328, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+      propertyPath: m_Name
+      value: Anime Speedlines
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+--- !u!4 &7612637937950181878 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
+  m_PrefabInstance: {fileID: 8417538942396455696}
+  m_PrefabAsset: {fileID: 0}

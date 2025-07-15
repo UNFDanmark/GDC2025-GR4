@@ -16,7 +16,7 @@ public class SoundScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (deathScript.dead)
+        if (deathScript.IsDead())
         {
             for (int i = 0; i < sources.Count; i++)
             {

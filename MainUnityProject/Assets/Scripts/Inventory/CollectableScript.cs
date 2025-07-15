@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 public class CollectableScript : MonoBehaviour
 {
     public InputAction collectAction;
+    public AudioClip pickUpSound;
+    
     InventoryManager inventoryManager;
     TextScript textScript;
     AudioSource audioSource;
-    public AudioClip pickUpSound;
     bool isInRange = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created

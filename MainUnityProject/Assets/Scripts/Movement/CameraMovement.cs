@@ -8,12 +8,19 @@ using Cursor = UnityEngine.Cursor;
 public class CameraMovement : MonoBehaviour
 {
     // Mouse movement
+    [Header("Mouse Sensitivity")]
     public float mouseSensitivityHorizontalScale; // How much to scale mouse sensitivity in the horizontal direction with
     public float mouseSensitivityVerticalScale; // How much to scale mouse sensitivity in the vertical direction with
     public float mouseSensitivity;
+    
+    [Header("FOV effects")]
     public float fovSpeedModifier;
+    public float speedForFov;
+    public float fovAdjustmentRate;
     public float defaultFov;
     public float maxFov;
+    
+    [Header("Headbobbing")]
     public float headBobbingSpeed;
     public float headBobbingAmplitudeVertical;
     public float headBobbingAmplitudeHorizontal;
@@ -46,7 +53,7 @@ public class CameraMovement : MonoBehaviour
     // Rotates camera and player correctly to move view around
     void Update()
     {
-        if (deathScript.dead)
+        if (deathScript.IsDead())
         {
             mainCameraComponent.fieldOfView = defaultFov;
             return;
@@ -81,7 +88,34 @@ public class CameraMovement : MonoBehaviour
     void FovSpeedChanger ()
     {
         float speedAlignment = Vector3.Dot(rb.linearVelocity, mainCamera.transform.forward);
-        mainCameraComponent.fieldOfView = defaultFov + Mathf.Clamp(speedAlignment * fovSpeedModifier, 0, maxFov-defaultFov);
+
+        float target;
+        
+        if (speedAlignment < speedForFov)
+        {
+            target = defaultFov;
+        }
+        else
+        {
+            target = defaultFov + Mathf.Clamp((speedAlignment - speedForFov) * fovSpeedModifier, 0, maxFov-defaultFov);
+        }
+
+        float current = mainCameraComponent.fieldOfView;
+
+        float correction = target - current;
+
+        float correctionAmount = fovAdjustmentRate * Time.deltaTime;
+
+        if (correction < correctionAmount)
+        {
+            mainCameraComponent.fieldOfView = target;
+        }
+        else
+        {
+            mainCameraComponent.fieldOfView += correctionAmount;
+        }
+
+
     }
 
     void HeadBobbing()

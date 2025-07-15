@@ -2,15 +2,19 @@ using UnityEngine;
 
 public class MusicScript : MonoBehaviour
 {
-    AudioSource audioSource;
     public AudioClip startingSong;
     public float initVolume;
+    public float initPitch;
+    
+    AudioSource audioSource;
+
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         audioSource = GetComponent<SoundScript>().MakeNewSource();
         SetMusicVolume(initVolume);
+        SetMusicPitch(initPitch);
         SetMusic(startingSong);
         StartMusic();
     }
@@ -29,6 +33,11 @@ public class MusicScript : MonoBehaviour
     public void StartMusic()
     {
         audioSource.Play();
+    }
+
+    public void SetMusicPitch(float level)
+    {
+        audioSource.pitch = level;
     }
 
     public void SetMusicVolume(float level)
