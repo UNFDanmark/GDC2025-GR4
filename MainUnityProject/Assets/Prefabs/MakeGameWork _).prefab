@@ -671,6 +671,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bdb52267cc931c4582cc64799817a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coyoteTime: 0.5
+  coyoteDisableAfterJump: 0
 --- !u!1 &3801677818028031160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,8 +1274,8 @@ MonoBehaviour:
   maxWalkingSpeed: 3
   timeToFullWalk: 0.2
   timeToStop: 0.2
-  jumpingHeight: 1
-  walkGravity: 9.81
+  jumpingHeight: 4
+  walkGravity: 25
   minSprintSpeed: 2
   maxSprintSpeed: 7
   timeToFullSprint: 0.2
@@ -1295,7 +1297,7 @@ MonoBehaviour:
   glideDrag: 0.1
   glideAdjustmentDegreeRate: 180
   glideBreakRate: 0.5
-  glideTurnAroundDebuff: 0.1
+  glideTurnAroundDebuff: 0.01
   gliderVolumeIncreaseRate: 0.033
   gliderPitchIncreaseRate: 0.05
   gliderPitchStart: 1
@@ -1342,7 +1344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d1a90fd4060d64fb9449b031dfdb00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathImpulse: 15
+  deathImpulse: 30
   boneBreakImpulse: 10
   hitSoundImpulse: 5
   hittingObstacleSound: {fileID: 8300000, guid: a683e82cb40ca5345b691fe6810caa00, type: 3}

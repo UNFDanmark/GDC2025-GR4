@@ -77,6 +77,8 @@ public class PlayerMovementScript : MonoBehaviour
     public float playerGliderTurnSpeed;
 
     public float gliderPullBackRate;
+
+
     
     // Things found in world that dont change (references)
     Rigidbody rb; // Rigidbody of player
@@ -108,6 +110,8 @@ public class PlayerMovementScript : MonoBehaviour
     bool sprinting;
 
     float glideGravityVelocity;
+
+    float coyoteCooldown;
     /*
      * ===================================================================================
      * START AND UPDATE
@@ -342,6 +346,7 @@ public class PlayerMovementScript : MonoBehaviour
         Vector3 vel = rb.linearVelocity;
         rb.linearVelocity = new Vector3(vel.x, jumpingForce, vel.z);
         jumpAudioSource.PlayOneShot(jumpSound);
+        canJumpScript.Jump();
     }
 
     // Handle walking logic from frame to frame
@@ -425,7 +430,7 @@ public class PlayerMovementScript : MonoBehaviour
         }
 
 
-        if (CanJump())
+        if (canJumpScript.OnJumpableGround())
         {
             gravity = 0;
         }

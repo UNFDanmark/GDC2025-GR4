@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class JumpDetectionScript : MonoBehaviour
 {
+    public float coyoteTime;
+    public float coyoteDisableAfterJump;
+    float coyoteCooldown;
+    float justJumpedTime;
     bool canJump;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -13,10 +17,22 @@ public class JumpDetectionScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        coyoteCooldown -= Time.deltaTime;
+        justJumpedTime -= coyoteDisableAfterJump;
     }
 
     public bool CanJump()
+    {
+        return canJump || (coyoteCooldown > 0 && coyoteDisableAfterJump < 0);
+    }
+
+    public void Jump()
+    {
+        coyoteCooldown = 0;
+        justJumpedTime = coyoteDisableAfterJump;
+    }
+
+    public bool OnJumpableGround()
     {
         return canJump;
     }
@@ -29,6 +45,7 @@ public class JumpDetectionScript : MonoBehaviour
         if (other.transform.CompareTag("Obstacle") || other.transform.CompareTag("Rock") || other.transform.CompareTag("Grass"))
         {
             canJump = true;
+            coyoteCooldown = coyoteTime;
         }
     }
 
