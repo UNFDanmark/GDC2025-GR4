@@ -4,6 +4,7 @@ using Unity.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -58,11 +59,15 @@ public class PlayerMovementScript : MonoBehaviour
     public float gliderVolumeIncreaseRate;
     public float gliderPitchIncreaseRate;
     public float gliderPitchStart;
-
+    
     public float gliderIconImageUseOpacity;
     
     [Header("UI References")]
     public GameObject gliderIcon;
+
+    public GameObject playerGliderObj;
+    public float playerGliderRotation;
+    public float playerGliderTurnSpeed;
 
     
     // Things found in world that dont change (references)
@@ -90,6 +95,7 @@ public class PlayerMovementScript : MonoBehaviour
     bool canBreak = false;
     float glidingSpeed; // When gliding speed is kept, this speed is seperate from the velocity because it isnt affected by glideGravity
     float walkSoundSpeedCooldown = 1;
+    bool sprinting;
     /*
      * ===================================================================================
      * START AND UPDATE
@@ -140,6 +146,7 @@ public class PlayerMovementScript : MonoBehaviour
         if (deathScript.IsDead())
         {
             rb.linearVelocity = Vector3.zero;
+            glidingAudioSource.volume = 0;
             return;
         }
         
@@ -186,6 +193,8 @@ public class PlayerMovementScript : MonoBehaviour
 
         WalkSound();
         
+        
+        
     }
     
     /*
@@ -217,7 +226,7 @@ public class PlayerMovementScript : MonoBehaviour
                 glidingSpeed = rb.linearVelocity.magnitude;
             }
             gliderPullOutAudioSource.PlayOneShot(gliderPulloutSound);
-
+            playerGliderObj.transform.SetParent(mainCamera.transform);
             gliderIconImage.color = new Color(1, 1, 1, gliderIconImageUseOpacity);
         }
     }
@@ -227,9 +236,9 @@ public class PlayerMovementScript : MonoBehaviour
     {
         // Figure out angle of pivot (straight forward is 0, down is 0-90, up is 360-270)
         float degree = mainCamera.transform.localRotation.eulerAngles.x;
-        
+
         // If looking upwards
-        if (degree > 270f) 
+        if (degree >= 270f) 
         {
             // Convert to amount of degree looking up
             float increase = 360 - degree;
@@ -279,7 +288,15 @@ public class PlayerMovementScript : MonoBehaviour
         
         //trying to make glide swoosh sound
 
-
+        if (playerGliderObj.transform.localRotation.eulerAngles.x < playerGliderRotation)
+        {
+            print(playerGliderObj.transform.localRotation.eulerAngles);
+            playerGliderObj.transform.localRotation =
+                Quaternion.Euler(playerGliderObj.transform.localRotation.eulerAngles.x + playerGliderTurnSpeed * Time.deltaTime, 0, 0);
+        }else if (playerGliderObj.transform.localRotation.eulerAngles.x > playerGliderRotation)
+        {
+            playerGliderObj.transform.localRotation = Quaternion.identity;
+        }
 
     }
     
@@ -386,7 +403,19 @@ public class PlayerMovementScript : MonoBehaviour
         
         // Replacing X and Z coordinates (those that go along with the ground) equal to the parts from the movement vector, and applying gravity to Y (upwards/downwards) velocity
         rb.linearVelocity = new Vector3(newWalk.x, vel.y - gravity, newWalk.y);
-        
+
+        if (playerGliderObj.transform.localRotation.eulerAngles.x > 90)
+        {
+            playerGliderObj.transform.localRotation = Quaternion.identity;
+        }else if (playerGliderObj.transform.localRotation.eulerAngles.x > 0)
+        {  
+            playerGliderObj.transform.localRotation =
+                Quaternion.Euler(playerGliderObj.transform.localRotation.eulerAngles.x - playerGliderTurnSpeed * Time.deltaTime, 0, 0);
+        }
+        else
+        {
+            playerGliderObj.transform.SetParent(transform);
+        }
     }
     
     /*

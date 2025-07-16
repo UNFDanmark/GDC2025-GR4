@@ -3,14 +3,21 @@ using UnityEngine;
 
 public class MortalityScript : MonoBehaviour
 {
-    public float ImpulseForDeath;
+    public float deathImpulse;
+    public float boneBreakImpulse;
+    public float hitSoundImpulse;
     
     DeathScript deathScript;
+    AudioSource hittingStuffAudioSource;
+
+    public AudioClip hittingObstacleSound;
+    public AudioClip boneBreakSound;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         deathScript = GetComponent<DeathScript>();
+        hittingStuffAudioSource = GetComponent<SoundScript>().MakeNewSource();
     }
 
     // Update is called once per frame
@@ -22,9 +29,17 @@ public class MortalityScript : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         print(other.impulse.magnitude);
-        if (other.impulse.magnitude > ImpulseForDeath)
+        if (other.impulse.magnitude > deathImpulse)
         {
+            hittingStuffAudioSource.PlayOneShot(boneBreakSound);
             deathScript.DieBad();
+        }else if (other.impulse.magnitude > hitSoundImpulse)
+        {
+            hittingStuffAudioSource.PlayOneShot(hittingObstacleSound);
+            if (other.impulse.magnitude > boneBreakImpulse)
+            {
+                hittingStuffAudioSource.PlayOneShot(boneBreakSound);
+            }
         }
     }
 
