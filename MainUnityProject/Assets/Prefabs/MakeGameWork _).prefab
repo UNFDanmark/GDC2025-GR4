@@ -657,7 +657,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.2, z: 1}
+  m_Size: {x: 0.6, y: 0.2, z: 0.6}
   m_Center: {x: 0, y: -1, z: 0}
 --- !u!114 &7268290839873894959
 MonoBehaviour:
@@ -672,7 +672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coyoteTime: 0.5
-  coyoteDisableAfterJump: 0
+  coyoteDisableAfterJump: 0.6
 --- !u!1 &3801677818028031160
 GameObject:
   m_ObjectHideFlags: 0

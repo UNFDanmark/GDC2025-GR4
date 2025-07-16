@@ -18,12 +18,12 @@ public class JumpDetectionScript : MonoBehaviour
     void Update()
     {
         coyoteCooldown -= Time.deltaTime;
-        justJumpedTime -= coyoteDisableAfterJump;
+        justJumpedTime -= Time.deltaTime;
     }
 
     public bool CanJump()
     {
-        return canJump || (coyoteCooldown > 0 && coyoteDisableAfterJump < 0);
+        return canJump || (coyoteCooldown > 0 && justJumpedTime < 0);
     }
 
     public void Jump()
