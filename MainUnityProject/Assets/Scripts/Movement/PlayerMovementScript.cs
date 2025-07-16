@@ -192,7 +192,7 @@ public class PlayerMovementScript : MonoBehaviour
         }
 
         WalkSound();
-        
+      
         
         
     }
@@ -227,6 +227,8 @@ public class PlayerMovementScript : MonoBehaviour
             }
             gliderPullOutAudioSource.PlayOneShot(gliderPulloutSound);
             playerGliderObj.transform.SetParent(mainCamera.transform);
+            playerGliderObj.transform.localPosition = Vector3.zero;
+            playerGliderObj.transform.localScale = Vector3.one;
             gliderIconImage.color = new Color(1, 1, 1, gliderIconImageUseOpacity);
         }
     }
@@ -328,11 +330,12 @@ public class PlayerMovementScript : MonoBehaviour
         float minSpeed;
         float acceleration;
 
-        if (moveInput.y > 0 && sprintAction.IsPressed())
+        if (moveInput.y > 0 && sprintAction.IsPressed() && sprinting)
         {
             maxSpeed = maxSprintSpeed;
             minSpeed = minSprintSpeed;
             acceleration = sprintingAcceleration;
+            
         }
         else
         {
@@ -415,6 +418,16 @@ public class PlayerMovementScript : MonoBehaviour
         else
         {
             playerGliderObj.transform.SetParent(transform);
+            playerGliderObj.transform.localPosition = Vector3.zero;
+            playerGliderObj.transform.localScale = Vector3.one;
+        }
+        if (CanJump())
+        {
+            sprinting = true;
+        }
+        else if (maxSpeed != maxSprintSpeed)
+        {
+            sprinting = false;
         }
     }
     

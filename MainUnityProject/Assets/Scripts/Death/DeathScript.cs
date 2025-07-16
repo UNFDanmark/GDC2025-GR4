@@ -23,6 +23,8 @@ public class DeathScript : MonoBehaviour
     public GameObject endCanvas;
     
     public float fadeToWhiteSpeed;
+    public float endingSongCrossFadeTime;
+    public float endingSongVolume;
     Image fadeToWhiteImage;
     MusicScript musicScript;
     public AudioClip endingSong;
@@ -76,7 +78,7 @@ public class DeathScript : MonoBehaviour
         endCanvas.SetActive(true);
         isEnding = true;
         dead = true;
-        musicScript.SetMusic(endingSong);
+        musicScript.SwitchMusic(endingSong, endingSongCrossFadeTime, endingSongVolume, false);
     }
 
     public void Respawn()
