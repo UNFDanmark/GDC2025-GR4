@@ -1683,18 +1683,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MakeGameWork :)
       objectReference: {fileID: 0}
-    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
-      propertyPath: walkGravity
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
-      propertyPath: jumpingHeight
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7268290839873894959, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
-      propertyPath: coyoteTime
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 8865875858434235030, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

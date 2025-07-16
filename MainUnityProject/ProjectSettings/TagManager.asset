@@ -11,6 +11,8 @@ TagManager:
   - Obstacle
   - Rock
   - Grass
+  - NormalSoundTrigger
+  - CorruptedSoundTrigger
   layers:
   - Default
   - TransparentFX
