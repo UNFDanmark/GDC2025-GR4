@@ -72,6 +72,7 @@ public class PlayerMovementScript : MonoBehaviour
     public float playerGliderRotation;
     public float playerGliderTurnSpeed;
 
+    public float gliderPullBackRate;
     
     // Things found in world that dont change (references)
     Rigidbody rb; // Rigidbody of player
@@ -305,6 +306,7 @@ public class PlayerMovementScript : MonoBehaviour
             playerGliderObj.transform.localRotation = Quaternion.identity;
         }
 
+        playerGliderObj.transform.localPosition = new Vector3(0, 0, -rb.linearVelocity.magnitude * gliderPullBackRate);
     }
     
     /*

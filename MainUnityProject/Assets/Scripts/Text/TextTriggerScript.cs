@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class TextTriggerScript : MonoBehaviour
 {
+    public string textShown;
+    
     TextScript textScript;
+    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        textScript = GameObject.FindWithTag("Player").GetComponent<TextScript>();
         
     }
 
@@ -26,7 +30,15 @@ public class TextTriggerScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            
+            textScript.ShowText(textShown);
         }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            textScript.StopText();
+        }   
     }
 }

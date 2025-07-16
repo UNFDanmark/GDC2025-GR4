@@ -6,6 +6,7 @@ public class CollectableScript : MonoBehaviour
 {
     public InputAction collectAction;
     public AudioClip pickUpSound;
+    public string gliderPickUpText;
     
     InventoryManager inventoryManager;
     TextScript textScript;
@@ -60,7 +61,7 @@ public class CollectableScript : MonoBehaviour
 
     void EnterRange()
     {
-        textScript.ShowText("press E bruh");
+        textScript.ShowText(gliderPickUpText);
     }
 
     void DuringInRange()
