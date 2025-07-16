@@ -226,7 +226,6 @@ public class PlayerMovementScript : MonoBehaviour
     void GlideBreak()
     {
         glidingSpeed *= (1 - glideBreakRate * Time.deltaTime);
-        print("break: " + glidingSpeed);
     }
 
     // Switch to gliding mode and set initial gliding speed
@@ -297,8 +296,6 @@ public class PlayerMovementScript : MonoBehaviour
         float gravityCorrection = desiredGravity - glideGravityVelocity;
 
         glideGravityVelocity += gravityCorrection * glideGravityCorrectionRate * Time.deltaTime;
-        
-        print("g" + glideGravityVelocity);
             
         Vector3 gravity = new Vector3(0, -glideGravityVelocity, 0);
 
@@ -322,7 +319,6 @@ public class PlayerMovementScript : MonoBehaviour
 
         if (playerGliderObj.transform.localRotation.eulerAngles.x < playerGliderRotation)
         {
-            print(playerGliderObj.transform.localRotation.eulerAngles);
             playerGliderObj.transform.localRotation =
                 Quaternion.Euler(playerGliderObj.transform.localRotation.eulerAngles.x + playerGliderTurnSpeed * Time.deltaTime, 0, 0);
         }else if (playerGliderObj.transform.localRotation.eulerAngles.x > playerGliderRotation)

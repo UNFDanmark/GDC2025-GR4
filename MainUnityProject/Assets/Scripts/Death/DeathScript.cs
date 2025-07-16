@@ -51,10 +51,8 @@ public class DeathScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(respawnCanvas.activeSelf);
         if (isEnding)
         {
-            print(fadeToWhite);
             fadeToWhite += fadeToWhiteSpeed * Time.deltaTime;
             fadeToWhiteImage.color = new Color(1, 1, 1, fadeToWhite);
             scrollTransform.anchoredPosition =
@@ -91,11 +89,8 @@ public class DeathScript : MonoBehaviour
 
     public void Respawn()
     {
-        print("TryingToRespawn");
         Cursor.lockState = CursorLockMode.Locked;
         respawnCanvas.SetActive(false);
-        print("CanvasGone");
-        print(respawnCanvas.activeSelf);
         dead = false;
         player.transform.position = saveState.playerPosition.transform.position;
         player.transform.rotation = saveState.playerPosition.transform.rotation;
