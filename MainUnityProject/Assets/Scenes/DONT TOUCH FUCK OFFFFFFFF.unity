@@ -22271,11 +22271,31 @@ PrefabInstance:
       objectReference: {fileID: 599369479}
     - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
       propertyPath: jumpingHeight
-      value: 20
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: restartAction.m_Name
+      value: Restart
       objectReference: {fileID: 0}
     - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
       propertyPath: glideAccelerationPerDegreeDown
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: restartAction.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: restartAction.m_SingletonActionBindings.Array.data[0].m_Id
+      value: bcd7ed45-5246-4606-81d1-da560747aa1f
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: restartAction.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Keyboard>/r
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: restartAction.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Restart
       objectReference: {fileID: 0}
     - target: {fileID: 6613442378457648092, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
       propertyPath: m_LocalPosition.x

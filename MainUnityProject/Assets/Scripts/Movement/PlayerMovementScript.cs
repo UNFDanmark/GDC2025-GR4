@@ -3,6 +3,7 @@ using System.Numerics;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
@@ -16,6 +17,7 @@ public class PlayerMovementScript : MonoBehaviour
     public InputAction moveAction;
     public InputAction jumpAction;
     public InputAction sprintAction;
+    public InputAction restartAction;
     
     //Audio & Sfx
     [Header("Audio")]
@@ -106,8 +108,9 @@ public class PlayerMovementScript : MonoBehaviour
     bool gliding = false; // In walk mode (false) or glide mode (true) ? - decides the movement logic to be done
     bool canBreak = false;
     float glidingSpeed; // When gliding speed is kept, this speed is seperate from the velocity because it isnt affected by glideGravity
-    float walkSoundSpeedCooldown = 1;
+    public float walkSoundSpeedCooldown = 1;
     bool sprinting;
+    bool isGrass;
 
     float glideGravityVelocity;
 
@@ -127,6 +130,7 @@ public class PlayerMovementScript : MonoBehaviour
         moveAction.Enable();
         jumpAction.Enable();
         sprintAction.Enable();
+        restartAction.Enable();
         
         // Initialize the references
         rb = GetComponent<Rigidbody>();
@@ -160,6 +164,11 @@ public class PlayerMovementScript : MonoBehaviour
     // Not commented because its mostly self-explanatory
     void Update()
     {
+        if (restartAction.IsPressed())
+        {
+            SceneManager.LoadScene(0);
+        }
+        
         if (deathScript.IsDead())
         {
             rb.linearVelocity = Vector3.zero;
@@ -512,18 +521,28 @@ public class PlayerMovementScript : MonoBehaviour
     }
 
     void OnTriggerStay(Collider other)
-    { 
+    {
+        if (other.gameObject.CompareTag("Rock"))
+        {
+            isGrass = false;
+        }
+        else if (other.gameObject.CompareTag("Grass"))
+        {
+            isGrass = true;
+        }
         if (walkSoundSpeedCooldown <0)
         {
             walkingAudioSource.pitch = Random.Range(walkingSoundPitch - walkingSoundPitchVariance,
                 walkingSoundPitch + walkingSoundPitchVariance);
-            if (other.gameObject.CompareTag("Rock"))
-            {
-                walkingAudioSource.PlayOneShot(stepRockSound);
-            }
-            else if (other.gameObject.CompareTag("Grass"))
+            
+
+            if (isGrass)
             {
                 walkingAudioSource.PlayOneShot(stepGrassSound);
+            }
+            else
+            {
+                walkingAudioSource.PlayOneShot(stepRockSound);
             }
 
             walkSoundSpeedCooldown = 1;
