@@ -47,7 +47,11 @@ public class PlayerMovementScript : MonoBehaviour
     // Physics for when in glide mode
     
     [Header("Gliding Physics")]
-    public float glideGravity;
+    public float glideGravityCorrectionRate;
+
+    public float glideGravityDampAdvantage;
+    public float minGlideGravity;
+    public float maxGlideGravity;
     public float glideMinSpeed;
     public float glideMaxSpeed;
     public float glideInitSpeed; // Speed sat to this during glide start
@@ -94,12 +98,16 @@ public class PlayerMovementScript : MonoBehaviour
     float sprintingAcceleration;
     float sprintingDeacceleration;
     float turnAcceleration;
+    float minGlideGravityEffect;
+    float maxGlideGravityEffect;
     
     bool gliding = false; // In walk mode (false) or glide mode (true) ? - decides the movement logic to be done
     bool canBreak = false;
     float glidingSpeed; // When gliding speed is kept, this speed is seperate from the velocity because it isnt affected by glideGravity
     float walkSoundSpeedCooldown = 1;
     bool sprinting;
+
+    float glideGravityVelocity;
     /*
      * ===================================================================================
      * START AND UPDATE
@@ -152,6 +160,8 @@ public class PlayerMovementScript : MonoBehaviour
         {
             rb.linearVelocity = Vector3.zero;
             glidingAudioSource.volume = 0;
+            gliding = false;
+            gliderIconImage.color = new Color(1, 1, 1, gliderIconImageBaseOpacity);
             return;
         }
         
@@ -221,7 +231,7 @@ public class PlayerMovementScript : MonoBehaviour
         if (inventoryManager.HasGlider())
         {
             gliding = true;
-            
+            glideGravityVelocity = 0;
             if (rb.linearVelocity.magnitude < glideInitSpeed)
             {
                 glidingSpeed = glideInitSpeed;
@@ -275,8 +285,18 @@ public class PlayerMovementScript : MonoBehaviour
 
         // Gliding vector, aka the way player is looking multiplied by glidingSpeed;
         Vector3 desiredGlideDirection = mainCamera.transform.forward;
+
+        float desiredGravity = minGlideGravity +
+                               (maxGlideGravity - minGlideGravity) *
+                               Mathf.Exp(-glidingSpeed * glideGravityDampAdvantage);
+
+        float gravityCorrection = desiredGravity - glideGravityVelocity;
+
+        glideGravityVelocity += gravityCorrection * glideGravityCorrectionRate * Time.deltaTime;
         
-        Vector3 gravity = new Vector3(0, -glideGravity, 0);
+        print("g" + glideGravityVelocity);
+            
+        Vector3 gravity = new Vector3(0, -glideGravityVelocity, 0);
 
         Vector3 actualGlideDirection = (rb.linearVelocity - gravity).normalized;
 

@@ -31,6 +31,7 @@ Transform:
   m_Children:
   - {fileID: 3156066046400744733}
   - {fileID: 1752273727780530684}
+  - {fileID: 6613442378457648092}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &648073179943746146
@@ -402,12 +403,12 @@ GameObject:
   m_Component:
   - component: {fileID: 115958908897161304}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GliderObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &115958908897161304
 Transform:
   m_ObjectHideFlags: 0
@@ -671,7 +672,7 @@ Transform:
   m_GameObject: {fileID: 5484183192347884315}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25.93, y: 16.1, z: 37.3}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -865,10 +866,15 @@ MonoBehaviour:
   gliderIconImageBaseOpacity: 1
   walkSoundSpeed: 0.5
   walkingSoundVolume: 1
-  glideGravity: 1
+  walkingSoundPitch: 1
+  walkingSoundPitchVariance: 0.12
+  glideGravityCorrectionRate: 0.2
+  glideGravityDampAdvantage: 0.3
+  minGlideGravity: 1
+  maxGlideGravity: 30
   glideMinSpeed: 0
   glideMaxSpeed: 100000
-  glideInitSpeed: 3
+  glideInitSpeed: 6
   glideAccelerationPerDegreeUp: -0.15
   glideAccelerationPerDegreeDown: 0.15
   glideDrag: 0.1
@@ -883,6 +889,7 @@ MonoBehaviour:
   playerGliderObj: {fileID: 3924328053516370107}
   playerGliderRotation: 90
   playerGliderTurnSpeed: 80
+  gliderPullBackRate: 0.005
 --- !u!114 &748951844638653686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -901,7 +908,7 @@ MonoBehaviour:
   fovSpeedModifier: 2
   speedForFov: 6
   fovAdjustmentRate: 10
-  defaultFov: 60
+  defaultFov: 90
   maxFov: 120
   headBobbingSpeed: 1.2
   headBobbingAmplitudeVertical: 0.08
@@ -936,7 +943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 493f82ea789905f4e970602a454fcf0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasGlider: 1
+  gliderObj: {fileID: 3924328053516370107}
   gliderIconCanvas: {fileID: 8858300943042319131}
 --- !u!114 &2835027994148558659
 MonoBehaviour:
@@ -964,7 +971,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingSong: {fileID: 8300000, guid: 2d40e25b9be25f840926bc465b42bb92, type: 3}
   initVolume: 0.5
-  initPitch: 0
+  initPitch: 1
 --- !u!114 &4842948453001721247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -980,6 +987,11 @@ MonoBehaviour:
   respawnCanvas: {fileID: 2161474732824354900}
   endCanvas: {fileID: 8601802294750499637}
   fadeToWhiteSpeed: 0.2
+  endingSongCrossFadeTime: 2
+  endingSongVolume: 0.5
+  spawnState:
+    playerPosition: {fileID: 7947053918046065713}
+    hasGlider: 1
   endingSong: {fileID: 8300000, guid: 457ea410ebda43c4384c52eafd66a654, type: 3}
 --- !u!1 &5568389010826943051
 GameObject:
@@ -1221,6 +1233,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &7947053918046065713
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6613442378457648092}
+  m_Layer: 0
+  m_Name: SpawnLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6613442378457648092
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7947053918046065713}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 21.3, y: 19.5, z: 49.31}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8865875858434235030}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8126188570526168485
 GameObject:
   m_ObjectHideFlags: 0
@@ -1637,6 +1680,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 115958908897161304}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1646,15 +1693,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.5
+      value: -0.75
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9990483
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.043619405
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1666,7 +1713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bca1dda212e7fdd43a39345524d01729, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -1724,7 +1771,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 2122495936555913958, guid: 0ec2e7e7bd38dd04da60278070283b94, type: 3}
       propertyPath: m_LocalRotation.w

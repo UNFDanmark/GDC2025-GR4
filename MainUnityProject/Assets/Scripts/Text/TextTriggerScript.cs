@@ -21,11 +21,6 @@ public class TextTriggerScript : MonoBehaviour
         
     }
 
-    void FixedUpdate()
-    {
-        throw new NotImplementedException();
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))

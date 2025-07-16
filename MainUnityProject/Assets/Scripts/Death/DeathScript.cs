@@ -1,16 +1,14 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DeathScript : MonoBehaviour
 {
+    [Serializable]
     public struct SaveState
     {
-        public Vector3 playerPosition;
-
-        public SaveState(Vector3 playerPosition)
-        {
-            this.playerPosition = playerPosition;
-        }
+        public GameObject playerPosition;
+        public bool hasGlider;
     }
 
     bool dead = false;
@@ -18,6 +16,7 @@ public class DeathScript : MonoBehaviour
     SaveState saveState;
 
     GameObject player;
+    InventoryManager inventoryManager;
     public GameObject respawnCanvas;
         
     public GameObject endCanvas;
@@ -25,6 +24,7 @@ public class DeathScript : MonoBehaviour
     public float fadeToWhiteSpeed;
     public float endingSongCrossFadeTime;
     public float endingSongVolume;
+    public SaveState spawnState;
     Image fadeToWhiteImage;
     MusicScript musicScript;
     public AudioClip endingSong;
@@ -37,10 +37,14 @@ public class DeathScript : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player");
         respawnCanvas.SetActive(false);
-        saveState = new SaveState(new Vector3(-7.08f, 11.89f, 3.4f));
+        saveState = spawnState;
+        
         
         fadeToWhiteImage = endCanvas.GetComponentInChildren<Image>();
+        inventoryManager = GetComponent<InventoryManager>();
         musicScript = GetComponent<MusicScript>();
+        
+        Respawn();
     }
 
     // Update is called once per frame
@@ -86,7 +90,8 @@ public class DeathScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         respawnCanvas.SetActive(false);
         dead = false;
-        player.transform.position = saveState.playerPosition;
-        player.transform.rotation = Quaternion.identity;
+        player.transform.position = saveState.playerPosition.transform.position;
+        player.transform.rotation = saveState.playerPosition.transform.rotation;
+        inventoryManager.SetGlider(saveState.hasGlider);
     }
 }

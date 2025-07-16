@@ -7,6 +7,7 @@ public class TextScript : MonoBehaviour
     public GameObject textCanvas;
     public float textFadeTime;
     TMP_Text textComponent;
+    DeathScript deathScript;
     bool isShowing;
     bool isRemoving;
     float currentFade;
@@ -15,11 +16,21 @@ public class TextScript : MonoBehaviour
     void Start()
     {
         textComponent = textCanvas.GetComponentInChildren<TMP_Text>();
+        deathScript = GetComponent<DeathScript>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (deathScript.IsDead())
+        {
+            textCanvas.SetActive(false);
+            isRemoving = false;
+            isShowing = false;
+            currentFade = 0;
+            textComponent.color = new Color(1, 1, 1, 0);
+            return;
+        }
         if (isShowing)
         {
             currentFade += Time.deltaTime / textFadeTime;
