@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
+using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -41,6 +42,8 @@ public class PlayerMovementScript : MonoBehaviour
     [Header("Walking Sound Settings")]
     public float walkSoundSpeed;
     public float walkingSoundVolume;
+    public float walkingSoundPitch;
+    public float walkingSoundPitchVariance;
     // Physics for when in glide mode
     
     [Header("Gliding Physics")]
@@ -81,7 +84,7 @@ public class PlayerMovementScript : MonoBehaviour
     AudioSource walkingAudioSource;
     AudioSource gliderPullOutAudioSource;
     Image gliderIconImage;
-    
+    CapsuleCollider playerCollider;
     
     // Stuff calculated at start and then never reassigned (constants)
     float jumpingForce; // Velocity needed to jump to jumpingHeight while being under the influence of walkGravity
@@ -123,6 +126,7 @@ public class PlayerMovementScript : MonoBehaviour
         glidingAudioSource = soundScript.MakeNewSource();
         walkingAudioSource = soundScript.MakeNewSource();
         gliderPullOutAudioSource = soundScript.MakeNewSource();
+        playerCollider = GetComponent<CapsuleCollider>();
 
         glidingAudioSource.loop = true;
         glidingAudioSource.volume = 0;
@@ -229,6 +233,7 @@ public class PlayerMovementScript : MonoBehaviour
             playerGliderObj.transform.SetParent(mainCamera.transform);
             playerGliderObj.transform.localPosition = Vector3.zero;
             playerGliderObj.transform.localScale = Vector3.one;
+            playerCollider.direction = 2;
             gliderIconImage.color = new Color(1, 1, 1, gliderIconImageUseOpacity);
         }
     }
@@ -461,6 +466,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         gliding = false;
         canBreak = false;
+        playerCollider.direction = 1;
         gliderIconImage.color = new Color(1, 1, 1, gliderIconImageBaseOpacity);
     }
 
@@ -486,6 +492,8 @@ public class PlayerMovementScript : MonoBehaviour
     { 
         if (walkSoundSpeedCooldown <0)
         {
+            walkingAudioSource.pitch = Random.Range(walkingSoundPitch - walkingSoundPitchVariance,
+                walkingSoundPitch + walkingSoundPitchVariance);
             if (other.gameObject.CompareTag("Rock"))
             {
                 walkingAudioSource.PlayOneShot(stepRockSound);
