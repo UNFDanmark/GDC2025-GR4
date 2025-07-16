@@ -31,7 +31,7 @@ Material:
     - _Time_Scale_2: 1
     - _Time_Scale_Speed: 0.02
     m_Colors:
-    - _Color_clou: {r: 0.7024582, g: 0.654902, b: 1, a: 0.33333334}
+    - _Color_clou: {r: 0.7024582, g: 0.654902, b: 1, a: 0.69803923}
     - _Tiling_variable: {r: 3, g: 3, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

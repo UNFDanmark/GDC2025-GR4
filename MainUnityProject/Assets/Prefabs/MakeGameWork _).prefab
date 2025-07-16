@@ -1141,6 +1141,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1752273727780530684}
+  - component: {fileID: 4842948453001721247}
   - component: {fileID: 8416586732871588971}
   - component: {fileID: 8128249149605921829}
   - component: {fileID: 5853872210698248010}
@@ -1151,7 +1152,6 @@ GameObject:
   - component: {fileID: 7132854157507183989}
   - component: {fileID: 2835027994148558659}
   - component: {fileID: 2491100677478881812}
-  - component: {fileID: 4842948453001721247}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1178,6 +1178,29 @@ Transform:
   - {fileID: 5316556958195980076}
   m_Father: {fileID: 8865875858434235030}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4842948453001721247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5484183192347884315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d00db7652009af4e817060e1e43d540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnCanvas: {fileID: 2161474732824354900}
+  endCanvas: {fileID: 8601802294750499637}
+  scrollTransform: {fileID: 111469864276781024}
+  fadeToWhiteSpeed: 0.2
+  endingSongCrossFadeTime: 2
+  endingSongVolume: 0.5
+  spawnState:
+    playerPosition: {fileID: 7947053918046065713}
+    hasGlider: 1
+  scrollSpeed: 10
+  endingSong: {fileID: 8300000, guid: 457ea410ebda43c4384c52eafd66a654, type: 3}
 --- !u!54 &8416586732871588971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1470,29 +1493,6 @@ MonoBehaviour:
   startingSong: {fileID: 8300000, guid: 2d40e25b9be25f840926bc465b42bb92, type: 3}
   initVolume: 0.5
   initPitch: 1
---- !u!114 &4842948453001721247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5484183192347884315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d00db7652009af4e817060e1e43d540, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  respawnCanvas: {fileID: 2161474732824354900}
-  endCanvas: {fileID: 8601802294750499637}
-  scrollTransform: {fileID: 111469864276781024}
-  fadeToWhiteSpeed: 0.2
-  endingSongCrossFadeTime: 2
-  endingSongVolume: 0.5
-  spawnState:
-    playerPosition: {fileID: 7947053918046065713}
-    hasGlider: 1
-  scrollSpeed: 10
-  endingSong: {fileID: 8300000, guid: 457ea410ebda43c4384c52eafd66a654, type: 3}
 --- !u!1 &5568389010826943051
 GameObject:
   m_ObjectHideFlags: 0
