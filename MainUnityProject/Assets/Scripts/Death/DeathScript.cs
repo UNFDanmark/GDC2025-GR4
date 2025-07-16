@@ -20,11 +20,13 @@ public class DeathScript : MonoBehaviour
     public GameObject respawnCanvas;
         
     public GameObject endCanvas;
+    public RectTransform scrollTransform;
     
     public float fadeToWhiteSpeed;
     public float endingSongCrossFadeTime;
     public float endingSongVolume;
     public SaveState spawnState;
+    public float scrollSpeed;
     Image fadeToWhiteImage;
     MusicScript musicScript;
     public AudioClip endingSong;
@@ -43,7 +45,6 @@ public class DeathScript : MonoBehaviour
         fadeToWhiteImage = endCanvas.GetComponentInChildren<Image>();
         inventoryManager = GetComponent<InventoryManager>();
         musicScript = GetComponent<MusicScript>();
-        
         Respawn();
     }
 
@@ -55,6 +56,8 @@ public class DeathScript : MonoBehaviour
             print(fadeToWhite);
             fadeToWhite += fadeToWhiteSpeed * Time.deltaTime;
             fadeToWhiteImage.color = new Color(1, 1, 1, fadeToWhite);
+            scrollTransform.anchoredPosition =
+                new Vector2(0, scrollTransform.anchoredPosition.y + scrollSpeed * Time.deltaTime);
         }
     }
 

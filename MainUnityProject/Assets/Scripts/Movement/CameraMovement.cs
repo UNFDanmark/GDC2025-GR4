@@ -25,6 +25,7 @@ public class CameraMovement : MonoBehaviour
     public float headBobbingAmplitudeVertical;
     public float headBobbingAmplitudeHorizontal;
     public float headBobbingReturnSpeed;
+    public float cameraHeight;
     
     // Things found in world that dont change (references)
     GameObject mainCamera; // 1st person camera
@@ -125,7 +126,7 @@ public class CameraMovement : MonoBehaviour
             headBobbingProgression += rb.linearVelocity.magnitude * headBobbingSpeed * Time.deltaTime;
             float backAndForth = Mathf.Cos(headBobbingProgression) * headBobbingAmplitudeHorizontal;
             float upAndDown = (1 - Mathf.Sin(2 * headBobbingProgression)) * headBobbingAmplitudeVertical;
-            mainCamera.transform.localPosition = new Vector3(backAndForth, upAndDown, 0);
+            mainCamera.transform.localPosition = new Vector3(backAndForth, upAndDown+cameraHeight, 0);
         }
         else if(mainCamera.transform.localPosition.x != 0f)
         {
@@ -134,12 +135,12 @@ public class CameraMovement : MonoBehaviour
             float upAndDown = (1 - Mathf.Sin(2 * headBobbingProgression)) * headBobbingAmplitudeVertical;
             if (Mathf.Sign(backAndForth) != Mathf.Sign(mainCamera.transform.localPosition.x))
             {
-                mainCamera.transform.localPosition = Vector3.zero;
+                mainCamera.transform.localPosition = new Vector3(0, cameraHeight, 0);
                 headBobbingProgression = 0;
             }
             else
             {
-                mainCamera.transform.localPosition = new Vector3(backAndForth, upAndDown, 0);
+                mainCamera.transform.localPosition = new Vector3(backAndForth, cameraHeight+upAndDown, 0);
             }
         }
        //tried fixing it because i had some good ideas, either don't know how to execute or doesn't work because of ??? reasons :3 sorry :3
