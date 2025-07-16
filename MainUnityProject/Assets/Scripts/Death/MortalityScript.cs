@@ -28,6 +28,7 @@ public class MortalityScript : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        if (other.gameObject.CompareTag("Obstacle")) return;
         print(other.impulse.magnitude);
         if (other.impulse.magnitude > deathImpulse)
         {
