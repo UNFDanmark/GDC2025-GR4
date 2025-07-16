@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8238621264895896477}
   - component: {fileID: 495206357411242784}
   m_Layer: 0
-  m_Name: Cyan Fog Card
+  m_Name: 1Cyan Fog Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
