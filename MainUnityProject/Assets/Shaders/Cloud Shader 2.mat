@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cloud Shader
+  m_Name: Cloud Shader 2
   m_Shader: {fileID: -6465566751694194690, guid: 538a5a1c8e87f314b8645773647a3fb9, type: 3}
   m_Parent: {fileID: -876546973899608171, guid: 538a5a1c8e87f314b8645773647a3fb9, type: 3}
   m_ModifiedSerializedProperties: 0
@@ -26,12 +26,13 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Alpha_clip: 0.7
+    - _Alpha_clip: 0.74
     - _QueueControl: 0
     - _Time_Scale_2: 1
     - _Time_Scale_Speed: 0.02
     m_Colors:
-    - _Tiling_variable: {r: 5, g: 5, b: 0, a: 0}
+    - _Color_clou: {r: 0.7024582, g: 0.654902, b: 1, a: 0.33333334}
+    - _Tiling_variable: {r: 3, g: 3, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &9221136541483224034
