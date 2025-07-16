@@ -1439,8 +1439,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1159301741}
     - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: gliderIconImageUseOpacity
+      value: 0.509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 5446403121966943679, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
       propertyPath: gliderIconImageBaseOpacity
-      value: 0.50980395
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6896404198086143554, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: m_Size.y
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7132854157507183989, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
       propertyPath: hasGlider

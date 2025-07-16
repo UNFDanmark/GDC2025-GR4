@@ -58,8 +58,10 @@ public class PlayerMovementScript : MonoBehaviour
     public float gliderVolumeIncreaseRate;
     public float gliderPitchIncreaseRate;
     public float gliderPitchStart;
+
+    public float gliderIconImageUseOpacity;
     
-    [Header]
+    [Header("UI References")]
     public GameObject gliderIcon;
 
     
@@ -216,7 +218,7 @@ public class PlayerMovementScript : MonoBehaviour
             }
             gliderPullOutAudioSource.PlayOneShot(gliderPulloutSound);
 
-            gliderIconImage.color = new Color(1, 1, 1, 1);
+            gliderIconImage.color = new Color(1, 1, 1, gliderIconImageUseOpacity);
         }
     }
 
