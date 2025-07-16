@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -99.720665
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.336254
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -36.658913
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
       propertyPath: m_LocalRotation.w
@@ -54,7 +54,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 440eb4699334d31488b4d6638725f87e, type: 2}
     - target: {fileID: 919132149155446097, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
       propertyPath: m_Name
-      value: brick pillar
+      value: wallPillar
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
+      propertyPath: m_TagString
+      value: Rock
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -88,6 +92,6 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 8439204940031503988, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
+  m_Mesh: {fileID: 4354059541210865747, guid: 58e56f7630ac71542b1cc928011b4a29, type: 3}
