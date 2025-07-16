@@ -4,11 +4,12 @@ using UnityEngine;
 public class CorruptionScript : MonoBehaviour
 {
     public float speedNeeded;
+    DeathScript deathScript;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        deathScript = GameObject.FindWithTag("Player").GetComponent<DeathScript>();
     }
 
     // Update is called once per frame
@@ -30,6 +31,6 @@ public class CorruptionScript : MonoBehaviour
 
     void OnSmash()
     {
-        print("smash");
+        deathScript.DieGood();
     }
 }
