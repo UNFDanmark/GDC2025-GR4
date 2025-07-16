@@ -22,6 +22,7 @@ public class CorruptionScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            print("THE BIG EVIL ORB JUST GOT STRUCK BY: " + other.impulse.magnitude);
             if (other.impulse.magnitude >= speedNeeded)
             {
                 OnSmash();
