@@ -107,7 +107,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -174,7 +174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d00db7652009af4e817060e1e43d540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dead: 0
   respawnCanvas: {fileID: 0}
   endCanvas: {fileID: 0}
   fadeToWhiteSpeed: 0.2
@@ -289,6 +288,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingSong: {fileID: 8300000, guid: 854a8f204dd741f46926757166a4d0e1, type: 3}
+  initVolume: 0
+  initPitch: 0
 --- !u!1 &5606908187904616561
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,10 +464,21 @@ MonoBehaviour:
     m_Flags: 0
   jumpSound: {fileID: 8300000, guid: f3018878caa3e814e9ba93c8ba384a37, type: 3}
   gliderPulloutSound: {fileID: 8300000, guid: 410f0b1b59d857543a0a87ed88252f83, type: 3}
-  walkingSpeed: 3
+  gliderSwoosh: {fileID: 0}
+  stepRockSound: {fileID: 0}
+  stepGrassSound: {fileID: 0}
+  minWalkingSpeed: 0
+  maxWalkingSpeed: 0
   timeToFullWalk: 0.2
+  timeToStop: 0
   jumpingHeight: 1
   walkGravity: 9.81
+  minSprintSpeed: 0
+  maxSprintSpeed: 0
+  timeToFullSprint: 0
+  timeToTurnAround: 0
+  walkSoundSpeed: 0
+  walkingSoundVolume: 0
   glideGravity: 1
   glideMinSpeed: 0
   glideMaxSpeed: 100000
@@ -477,7 +489,9 @@ MonoBehaviour:
   glideAdjustmentDegreeRate: 0
   glideBreakRate: 0
   glideTurnAroundDebuff: 0
-  sprintSpeed: 0
+  gliderVolumeIncreaseRate: 0
+  gliderPitchIncreaseRate: 0
+  gliderPitchStart: 0
 --- !u!114 &3785733920889740900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,11 +508,14 @@ MonoBehaviour:
   mouseSensitivityVerticalScale: 1
   mouseSensitivity: 0.5
   fovSpeedModifier: 2
+  speedForFov: 0
+  fovAdjustmentRate: 0
   defaultFov: 60
   maxFov: 0
   headBobbingSpeed: 0
   headBobbingAmplitudeVertical: 0
   headBobbingAmplitudeHorizontal: 0
+  headBobbingReturnSpeed: 0
 --- !u!136 &5107773257524748560
 CapsuleCollider:
   m_ObjectHideFlags: 0
