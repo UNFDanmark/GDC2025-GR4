@@ -34,6 +34,7 @@ public class TextTriggerScript : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             textScript.StopText();
+            gameObject.SetActive(false);
         }   
     }
 }

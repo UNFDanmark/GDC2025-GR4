@@ -10,6 +10,7 @@ public class MusicScript : MonoBehaviour
     float crossFadeProgress;
     float crossFadeRate;
     float targetVolume;
+    float previousVolume;
     AudioSource audioSource;
     AudioSource audioSourceOther;
 
@@ -39,7 +40,7 @@ public class MusicScript : MonoBehaviour
             else
             {
                 audioSourceOther.volume = crossFadeProgress * targetVolume;
-                audioSource.volume = (1 - crossFadeProgress) * targetVolume;
+                audioSource.volume = (1f - crossFadeProgress) * previousVolume;
             }
         }
     }
@@ -83,6 +84,7 @@ public class MusicScript : MonoBehaviour
             crossFadeRate = 1 / crossFadeTime;
             audioSourceOther.clip = song;
             audioSourceOther.Play();
+            previousVolume = audioSource.volume;
             if(keepOffset) audioSourceOther.time = audioSource.time;
             crossFadeProgress = 0f;
         }
