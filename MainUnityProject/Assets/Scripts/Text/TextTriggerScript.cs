@@ -25,15 +25,13 @@ public class TextTriggerScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            print("lmao");
             textScript.ShowText(textShown);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            textScript.StopText();
-        }   
+        Destroy(gameObject);
     }
 }

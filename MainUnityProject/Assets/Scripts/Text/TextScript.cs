@@ -6,11 +6,13 @@ public class TextScript : MonoBehaviour
 {
     public GameObject textCanvas;
     public float textFadeTime;
+    public float textStayTime;
     TMP_Text textComponent;
     DeathScript deathScript;
     bool isShowing;
     bool isRemoving;
     float currentFade;
+    float textCooldown;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,6 +32,16 @@ public class TextScript : MonoBehaviour
             currentFade = 0;
             textComponent.color = new Color(1, 1, 1, 0);
             return;
+        }
+
+        if (textCooldown > 0)
+        {
+            textCooldown -= Time.deltaTime;
+        }
+        else if(!(textCooldown < -100))
+        {
+            StopText();
+            textCooldown = -200;
         }
         if (isShowing)
         {
@@ -56,15 +68,17 @@ public class TextScript : MonoBehaviour
     
     public void ShowText(string text)
     {
+        print("showing");
         textComponent.text = text;
         isShowing = true;
         isRemoving = false;
         textCanvas.SetActive(true);
-        
+        textCooldown = textStayTime;
     }
 
     public void StopText()
     {
+        print("stopping");
         isShowing = false;
         isRemoving = true;
     }

@@ -23532,6 +23532,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -18.25
       objectReference: {fileID: 0}
+    - target: {fileID: 3843932486310469208, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
+      propertyPath: textStayTime
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4842948453001721247, guid: b1cd2bcc0f87c1941a2e4ff2218705c3, type: 3}
       propertyPath: endingSong
       value: 
